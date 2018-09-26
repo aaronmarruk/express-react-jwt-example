@@ -2,10 +2,9 @@ import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt-nodejs';
 
 const userSchema = mongoose.Schema({
-  local: {
-    email: String,
-    password: String,
-  },
+  // TODO check for email type
+  email: { unique: true, type: String, required: true },
+  password: { type: String, required: true },
 });
 
 userSchema.methods.generateHash = password => bcrypt.hashSync(
