@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { demoAction } from './actions/demoActions'
+import { demoAction, getDemoJSON } from './actions/demoActions'
 
 import logo from './logo.svg';
 import './App.css';
@@ -62,12 +63,47 @@ const Info = () => (
   </div>
 )
 
+class DemoJSON extends Component {
+  static propTypes = {
+    getDemoJSON: PropTypes.func.isRequired,
+  };
+
+  componentWillMount() {
+    console.log('This component mounts?');
+    this.getJSON();
+  }
+
+  getJSON = () => {
+    const { getDemoJSON } = this.props;
+
+    getDemoJSON();
+  }
+
+  render() {
+    const { demoJSON } = this.props;
+
+    return (
+      <pre>
+        {
+          JSON.stringify(demoJSON)
+        }
+      </pre>
+    );
+  }
+}
+
 class App extends Component {
   demoAction = (event) => {
     this.props.demoAction();
   }
 
+  componentWillUpdate() {
+    console.log('This props', this.props.demoReducer && this.props.demoReducer.toJSON());
+  }
+
   render() {
+    const { getDemoJSON } = this.props;
+
     return (
       <Router>
         <div className="App">
@@ -84,10 +120,13 @@ class App extends Component {
             <Route exact path="/info" component={Info} />
             <button onClick={this.demoAction}>Test redux action</button>
             <pre>
-              {
-                JSON.stringify(this.props)
-              }
+              {/* {
+                this.props.demoReducer.toJSON()
+              } */}
             </pre>
+            <DemoJSON 
+              getDemoJSON={getDemoJSON}
+            />
           </div>
         </div>
       </Router>
@@ -95,5 +134,5 @@ class App extends Component {
   }
 }
 
-export default connect(mapStateToProps, {demoAction})(App);
+export default connect(mapStateToProps, {demoAction, getDemoJSON})(App);
 

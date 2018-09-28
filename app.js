@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import authRouter from './routes/auth';
+import demoRouter from './routes/demo';
 
 import db from './config/db';
 
@@ -27,12 +28,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('api/v1/', indexRouter);
-app.use('api/v1/user', usersRouter);
-app.use('api/v1/auth', authRouter);
+app.use('/api/v1/', indexRouter);
+app.use('/api/v1/user', usersRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/demo', demoRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
+  console.log('THIS IS FIRED');
+  res.setHeader('Content-Type', 'application/json');
   next(createError(404));
 });
 
