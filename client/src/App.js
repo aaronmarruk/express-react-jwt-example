@@ -3,15 +3,20 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { demoAction, getDemoJSON } from './actions/demoActions'
+import { loginUser, logoutUser } from './actions/userActions'
 
 import logo from './logo.svg';
 import './App.css';
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-const mapStateToProps = state => ({
-  ...state
-});
+const mapStateToProps = (state) => {
+  console.log('THE STATE!!!', state.toJS());
+  return { 
+    userReducer: state.get('userReducer'), 
+    demoReducer: state.get('demoReducer'),
+  };
+};
 
 const MainMenu = () => (
   <div>
@@ -98,12 +103,15 @@ class App extends Component {
   }
 
   componentWillUpdate() {
-    console.log('This props', this.props.demoReducer && this.props.demoReducer.toJSON());
+    // console.log('This props', this.props.demoReducer && this.props.demoReducer.toJSON());
   }
 
   render() {
     const { getDemoJSON } = this.props;
-
+    console.log('THE PROPS!!!!!', this.props.userReducer);
+    const isAuthenticated = this.props.userReducer.getIn('isAuthenticated');
+    const errorMessage = this.props.userReducer.get('errorMessage');
+    const { loginUser, logoutUser } = this.props;
     return (
       <Router>
         <div className="App">
@@ -113,6 +121,16 @@ class App extends Component {
             <MainMenu />
           </header>
           <div>
+            {!isAuthenticated &&
+              <Login
+                errorMessage={errorMessage}
+                onLoginClick={ creds => loginUser(creds) }
+              />
+            }
+
+            {isAuthenticated &&
+              <Logout onLogoutClick={() => logoutUser()} />
+            }
             <Route exact path="/" component={Home} />
             <Route exact path="/about" component={About} />
             <Route exact path="/code" component={Code} />
@@ -134,5 +152,47 @@ class App extends Component {
   }
 }
 
-export default connect(mapStateToProps, {demoAction, getDemoJSON})(App);
+export class Login extends Component {
+
+  render() {
+    const { errorMessage } = this.props
+
+    return (
+      <div>
+        <input type='text' ref='username' className="form-control" placeholder='Username'/>
+        <input type='password' ref='password' className="form-control" placeholder='Password'/>
+        <button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
+          Login
+        </button>
+
+        {errorMessage &&
+          <p>{errorMessage}</p>
+        }
+      </div>
+    )
+  }
+
+  handleClick(event) {
+    const username = this.refs.username
+    const password = this.refs.password
+    const creds = { username: username.value.trim(), password: password.value.trim() }
+    this.props.onLoginClick(creds)
+  }
+}
+
+export class Logout extends Component {
+
+  render() {
+    const { onLogoutClick } = this.props
+
+    return (
+      <button onClick={() => onLogoutClick()} className="btn btn-primary">
+        Logout
+      </button>
+    )
+  }
+
+}
+
+export default connect(mapStateToProps, {demoAction, getDemoJSON, loginUser, logoutUser})(App);
 
