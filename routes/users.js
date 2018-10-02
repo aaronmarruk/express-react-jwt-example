@@ -11,6 +11,8 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res /* ,
 router.post('/', (req, res, next) => {
   passport.authenticate('local-signup', { session: false }, (err, user, info) => {
     if (info) return res.status(422).send(info);
+    
+    user.message = 'You have signed up successfully';
 
     return res.send(user);
   })(req, res, next);

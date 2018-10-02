@@ -5,6 +5,8 @@ import {
   LOGIN_SUCCESS, 
   LOGIN_FAILURE, 
   LOGOUT_SUCCESS,
+  SIGNUP_FAILURE,
+  SIGNUP_SUCCESS,
 } from '../actions/userActions'
 
 const initialState = fromJS({
@@ -33,6 +35,16 @@ export default (state = initialState, action) => {
       return state
         .set('isFetching', true)
         .set('isAuthenticated', false)
+    case SIGNUP_FAILURE:
+      return state
+        .set('isFetching', false)
+        .set('isAuthenticated', false)
+        .set('errorMessage', action.message);
+    case SIGNUP_SUCCESS:
+      return state
+        .set('isFetching', false)
+        .set('isAuthenticated', false)
+        .set('successMessage', action.message);
     default:
       return state
   }
