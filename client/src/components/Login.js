@@ -8,17 +8,10 @@ export class Login extends Component {
     redirect: false
   }
 
-  componentWillMount() {
-    const { isAuthenticated } = this.props;
-
-    this.setState({ redirect: isAuthenticated });
-  }
-
   render() {
-    const { errorMessage } = this.props;
-    const { redirect } = this.state;
+    const { errorMessage, isAuthenticated } = this.props;
 
-    return redirect ? 
+    return isAuthenticated ? 
       (
         <Redirect to='/profile'/>
       ) :
@@ -32,16 +25,17 @@ export class Login extends Component {
               {errorMessage}
             </div>
           }
+          <h4>Login</h4>
           <input 
             type='text' 
             ref='username' 
-            className="form-control" 
+            className="form-control mb-2" 
             placeholder='Username'
           />
           <input 
             type='password' 
             ref='password' 
-            className="form-control" 
+            className="form-control mb-2" 
             placeholder='Password'
           />
 

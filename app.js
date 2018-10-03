@@ -6,7 +6,7 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 
 import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+import userRouter from './routes/user';
 import authRouter from './routes/auth';
 import demoRouter from './routes/demo';
 
@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/v1/', indexRouter);
-app.use('/api/v1/user', usersRouter);
+app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/demo', demoRouter);
 

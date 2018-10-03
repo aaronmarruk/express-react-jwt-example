@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
   // TODO check for email type
   email: { unique: true, type: String, required: true },
   password: { type: String, required: true },
+  profile: { type: String },
 });
 
 userSchema.methods.generateHash = password => bcrypt.hashSync(
@@ -12,7 +13,7 @@ userSchema.methods.generateHash = password => bcrypt.hashSync(
 );
 
 userSchema.methods.validPassword = (password, user) => {
-  const localPassword = user.local.password;
+  const localPassword = user.password;
 
   return bcrypt.compareSync(password, localPassword);
 };

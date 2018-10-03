@@ -21,7 +21,7 @@ const Home = ({ errorMessage, successMessage }) => (
     }
     <div className="container">
 
-      <div className="py-5 px-5 text-center">
+      <div className="py-5 px-5">
         <h2>
           Express + React + Redux + JWT Authentication
         </h2>

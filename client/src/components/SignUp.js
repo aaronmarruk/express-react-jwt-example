@@ -21,16 +21,17 @@ export class SignUp extends Component {
               {errorMessage}
             </div>
           }
+          <h4>Sign up</h4>
           <input 
             type='text' 
             ref='username' 
-            className="form-control" 
+            className="form-control mb-2" 
             placeholder='Username'
           />
           <input 
             type='password' 
             ref='password' 
-            className="form-control" 
+            className="form-control mb-2" 
             placeholder='Password'
           />
           

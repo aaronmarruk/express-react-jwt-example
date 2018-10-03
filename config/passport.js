@@ -1,7 +1,6 @@
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import * as passportLocal from 'passport-local';
-
 import User from '../models/user';
 
 const LocalStrategy = passportLocal.Strategy;
@@ -15,8 +14,12 @@ passport.use(new LocalStrategy(
   },
 
   (email, password, cb) => {
-    User.findOne({ email, password })
+    User.findOne({ email })
       .then((user) => {
+        if (user && !user.validPassword(password, user)) {
+          return cb(null, false, { message: 'Incorrect password.' });
+        } 
+
         if (!user) {
           return cb(null, false, { message: 'Incorrect email or password.' });
         }
@@ -25,7 +28,6 @@ passport.use(new LocalStrategy(
           message: 'Logged In Successfully'
         });
       })
-
       .catch(err => cb(err));
   },
 ));
@@ -51,7 +53,13 @@ passport.use('local-signup', new LocalStrategy(
 
         newUser.email = email;
         newUser.password = newUser.generateHash(password);
-
+        newUser.profile = `
+          This is the user profile passed from the Express web server. It's hard-
+          coded in Express. This is just to give you an idea for how this might 
+          be implemented. The Express route used to return this data is 
+          authenticated by passport.
+        `;
+       
         newUser.save((saveErr) => {
           if (saveErr) {
             throw saveErr;
@@ -74,7 +82,7 @@ passport.use(new JWTStrategy(
 
   (jwtPayload, cb) => {
     /* eslint-disable-next-line */
-    return User.find({ _id: jwtPayload._id })
+    return User.findOne({ _id: jwtPayload._id })
       .then(user => cb(null, user))
 
       .catch(err => cb(err));
