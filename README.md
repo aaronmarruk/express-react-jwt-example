@@ -32,3 +32,24 @@ JWT_SECRET=yoursupersecret npm run dev
 start the client
 cd client
 npm start
+
+# Start the shell
+mongo
+
+# Use the zenwriter db
+use zenwriter
+
+# Show collections (only shows collections which have items)
+show collections
+
+# Find all users
+db.users.find()
+
+# Insert into collection
+db.notes.insert({title: 'My note'})
+
+# Find notes by userId
+db.notes.find({'userId': '5b1402b6c5058e1c2389fb9f'})
+
+# Delete note by ID
+db.notes.remove('noteid')
